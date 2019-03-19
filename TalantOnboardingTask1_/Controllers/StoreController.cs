@@ -56,18 +56,33 @@ namespace TalantOnboardingTask1_.Controllers
         }
         public JsonResult DeleteStoreList(int id)
         {
-
             TalentEntities db = new TalentEntities();
-            var Store = db.Store_.Where(x => x.Id == id).SingleOrDefault();
-            if (Store != null)
+            var Prod = db.Product_.Where(x => x.Id == id).SingleOrDefault();
+            if (Prod != null)
             {
-                db.Store_.Remove(Store);
-                db.SaveChanges();
+                if (Prod.Sales_.Count == 0)
+                {
+                    db.Product_.Remove(Prod);
+                    db.SaveChanges();
+
+                }
+                else
+                {
+                    var sales = db.Sales_.Where(x => x.ProductId == id).ToList();
+
+                    foreach (var sale in sales)
+                    {
+                        //deleting corresponding sales record
+                        db.Sales_.Remove(sale);
+                        db.SaveChanges();
+                    }
+                    db.Product_.Remove(Prod);
+                    db.SaveChanges();
+                }
             }
 
             return new JsonResult { Data = "Success", JsonRequestBehavior = JsonRequestBehavior.AllowGet };
-
-        }
+            
         public JsonResult GetEdit(int id)
         {
 
