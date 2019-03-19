@@ -65,17 +65,32 @@ namespace TalantOnboardingTask1_.Controllers
         public JsonResult DeleteCustomer(int id)
         {
 
-            TalentEntities db = new TalentEntities();
+         TalentEntities db = new TalentEntities();
             var customer = db.Customer_.Where(x => x.Id == id).SingleOrDefault();
             if (customer != null)
             {
-                db.Customer_.Remove(customer);
-                db.SaveChanges();
+                if (customer.Sales_.Count == 0)
+                {
+                    db.Customer_.Remove(customer);
+                    db.SaveChanges();
+
+                }
+                else
+                {
+                    var sales = db.Sales_.Where(x => x.CustomerId == id).ToList();
+
+                    foreach (var sale in sales)
+                    {
+                   
+                        db.Sales_.Remove(sale);
+                        db.SaveChanges();
+                    }
+                    db.Customer_.Remove(customer);
+                    db.SaveChanges();
+                }
             }
 
             return new JsonResult { Data = "Success", JsonRequestBehavior = JsonRequestBehavior.AllowGet };
-
-        }
 
         //Edit
         public JsonResult GetEdit(int id)
