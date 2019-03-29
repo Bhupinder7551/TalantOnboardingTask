@@ -63,7 +63,7 @@ export default class CustomerTable extends Component {
             success: function (data) {
                 var obj = JSON.parse(data);
                 this.setState({ CustomerId: obj.Id, CustomerName: obj.Name, CustomerAddress: obj.Address })
-                this.setState({ CustomerId: data.Id, CustomerName: data.Name, CustomerAddress: data.Address })
+               // this.setState({ CustomerId: data.Id, CustomerName: data.Name, CustomerAddress: data.Address })
             }.bind(this)
         });
       
